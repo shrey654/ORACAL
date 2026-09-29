@@ -1,0 +1,45 @@
+SQL> CREATE OR REPLACE PROCEDURE change_name
+  2  (
+  3      p_rollno NUMBER,
+  4      p_name VARCHAR2
+  5  )
+  6  IS
+  7      v_count NUMBER;
+  8  BEGIN
+  9      SELECT COUNT(*)
+ 10      INTO v_count
+ 11      FROM student
+ 12      WHERE id = p_rollno;
+ 13
+ 14      IF v_count = 0 THEN
+ 15          RAISE_APPLICATION_ERROR(-20001,
+ 16              'Student does not exist');
+ 17      END IF;
+ 18
+ 19      UPDATE student
+ 20      SET fname = UPPER(p_name)
+ 21      WHERE id = p_rollno;
+ 22
+ 23      DBMS_OUTPUT.PUT_LINE('Student name updated');
+ 24  END;
+ 25  /
+
+Procedure created.
+
+--Call
+
+SQL> EXEC change_name(1,'shrey');
+
+Student name updated
+
+PL/SQL procedure successfully completed.
+
+--Check
+
+SQL> SELECT * FROM student;
+
+        ID FNAME                LNAME                CITY
+---------- -------------------- -------------------- --------------------
+         1 SHREY                Makwana              Rajkot
+         2 Rahul                Patel                Ahmedabad
+         3 Amit                 Shah                 Surat
